@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python3 scripts/build-kingdom-v2.py && python3 scripts/apply-production-fixes.py",
+  "buildCommand": "python3 scripts/build-kingdom-v2.py && python3 scripts/apply-production-fixes.py && python3 scripts/verify-kingdom-outputs.py",
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
