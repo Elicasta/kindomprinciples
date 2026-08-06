@@ -1,0 +1,34 @@
+{
+  "id": "kingdom-principles",
+  "title": "Kingdom Principles",
+  "subtitle": "Kingdom Decisions Series",
+  "theme": {
+    "deepNavy": "#071521",
+    "midnightBlue": "#0D2232",
+    "charcoalBlack": "#101417",
+    "warmGold": "#D6A63B",
+    "mutedGold": "#B8872E",
+    "ivoryWhite": "#E8E3D9",
+    "softGray": "#A7A9A6",
+    "warmHighlight": "#F2D48A",
+    "titleFont": "Bebas Neue",
+    "bodyFont": "Montserrat",
+    "scriptureFont": "EB Garamond"
+  },
+  "weeks": [
+    {"week": 1, "principle": "Identity", "governingQuestion": "What voice is defining me?"},
+    {"week": 2, "principle": "Priority", "governingQuestion": "What is organizing my life?"},
+    {"week": 3, "principle": "Alignment", "governingQuestion": "Am I living under the authority I want to carry?"}
+  ],
+  "lessons": [
+    {
+      "id": "lesson-1",
+      "title": "The Principle of Identity",
+      "keyThought": "Identity must be settled before pressure comes.",
+      "path": "/content/series/kingdom-principles/lesson-1/lesson.md",
+      "slides": 22,
+      "polls": 7,
+      "enabled": true
+    }
+  ]
+}
