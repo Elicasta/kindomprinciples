@@ -5,12 +5,13 @@
   'use strict';
 
   const URL = 'https://vpppznyhrickcabpfvfx.supabase.co';
-  const KEY = 'sb_publishable_ZvmCwSVoRGcxU3iBIwAh2Q_wqKiw9co';
+  const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwcHB6bnlocmlja2NhYnBmdmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNDIwNjYsImV4cCI6MjEwMTYxODA2Nn0.G8W6ERO4jWvCjSPEKiz46325Rog4d4QT_G2VCv0hI6k';
   const INTERVAL_MS = 700;
   let lastUpdatedAt = '';
   let timer = null;
   let inFlight = false;
   let stopped = false;
+  let healthy = false;
 
   function setStatus(text, live){
     const targets = [
@@ -27,6 +28,21 @@
       document.getElementById('sp-live-dot')
     ].filter(Boolean);
     dots.forEach(function(el){ el.classList.toggle('live', Boolean(live)); });
+  }
+
+  function installStatusGuard(){
+    const original = window.markRealtimeStatus;
+    if(typeof original !== 'function' || original.__kingdomGuarded) return;
+    const guarded = function(text, live){
+      if(healthy && /error|timed out|failed/i.test(String(text || ''))){
+        setStatus('Live ✓', true);
+        return;
+      }
+      return original.apply(this, arguments);
+    };
+    guarded.__kingdomGuarded = true;
+    window.markRealtimeStatus = guarded;
+    try{ markRealtimeStatus = guarded; }catch(error){}
   }
 
   function isController(){
@@ -65,9 +81,11 @@
       const rows = await response.json();
       const row = Array.isArray(rows) ? rows[0] : null;
       applyPayload(row);
+      healthy = true;
       setStatus('Live ✓', true);
       document.documentElement.dataset.kpSyncTransport = 'rest-fallback';
     }catch(error){
+      healthy = false;
       setStatus('Sync retrying', false);
       console.warn('Kingdom sync fallback retrying', error);
     }finally{
@@ -77,6 +95,9 @@
 
   function start(){
     if(timer) return;
+    installStatusGuard();
+    setTimeout(installStatusGuard, 300);
+    setTimeout(installStatusGuard, 1200);
     poll();
     timer = window.setInterval(poll, INTERVAL_MS);
     window.addEventListener('online', poll);
