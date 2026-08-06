@@ -116,16 +116,18 @@ def main() -> None:
     require(
         p2_css,
         [
-            "Spanish RVR, primary",
-            "English KJV, concurrent support",
+            "Spanish RVR1960, primary",
+            "English KJV",
             "#sp-ref-en",
             "#sp-tx-en",
             "#sp-ref-es",
             "#sp-tx-es",
-            "grid-template-rows:auto minmax(0,1fr) auto auto",
+            "grid-template-columns:18px minmax(0,1fr)",
+            "border-top:1px solid",
+            "background:var(--gold)",
             "p2-xlong",
         ],
-        "Spanish-primary P2 layout",
+        "approved Spanish-first P2 composition",
     )
     require(
         p2_js,
@@ -206,7 +208,7 @@ def main() -> None:
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom outputs, P2 concurrent scripture, all 22 slides, split verse bank, Supabase, and sync fallback verified")
+    print("Kingdom outputs, approved Spanish-first P2, all 22 slides, split verse bank, Supabase, and sync fallback verified")
 
 
 if __name__ == "__main__":
