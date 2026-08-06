@@ -8,6 +8,7 @@ INDEX = ROOT / "index.html"
 FIT_CSS = ROOT / "kingdom-presentation-fit.css"
 FIXES_JS = ROOT / "kingdom-production-fixes.js"
 DATA_JS = ROOT / "kingdom-v2.js"
+SUPABASE_JS = ROOT / "kingdom-supabase.js"
 
 
 def require(text: str, markers: list[str], label: str) -> None:
@@ -25,9 +26,11 @@ def main() -> None:
     fit_css = FIT_CSS.read_text(encoding="utf-8")
     fixes_js = FIXES_JS.read_text(encoding="utf-8")
     data_js = DATA_JS.read_text(encoding="utf-8")
+    supabase_js = SUPABASE_JS.read_text(encoding="utf-8")
 
     node_check(DATA_JS)
     node_check(FIXES_JS)
+    node_check(SUPABASE_JS)
 
     require(
         index,
@@ -42,6 +45,8 @@ def main() -> None:
             "id=\"confidence-screen\"",
             "kingdom-presentation-fit.css",
             "kingdom-production-fixes.js",
+            "kingdom-supabase.js",
+            "vpppznyhrickcabpfvfx.supabase.co",
             "KINGDOM <span>PRINCIPLES</span>",
         ],
         "generated index",
@@ -66,8 +71,26 @@ def main() -> None:
             "scriptureMap:SCRIPTURES",
             "pollBank:POLLS",
             "questions:QUESTIONS_DATA",
+            "kpRuntimeOptimized",
         ],
-        "lesson data",
+        "lesson data and optimized runtime",
+    )
+
+    if "characterData:true" in data_js:
+        raise RuntimeError("input-lag character mutation observer survived")
+
+    require(
+        supabase_js,
+        [
+            "kingdom-principles-live",
+            "x-client-id",
+            ".from('attendees')",
+            ".from('questions')",
+            ".from('responses')",
+            "setTimeout(function(){ saveWorkbookAnswer(textarea); }, 850)",
+            "postgres_changes",
+        ],
+        "Kingdom Supabase integration",
     )
 
     require(
@@ -100,12 +123,13 @@ def main() -> None:
         "assets/ministry-bg.jpeg",
         "assets/qr-ministry.png",
         "ministry2026",
+        "cgliqvizpcctqhsldixn.supabase.co",
     ]
     surviving = [marker for marker in forbidden if marker in index]
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom output verification passed")
+    print("Kingdom output, performance, and Supabase verification passed")
 
 
 if __name__ == "__main__":
