@@ -1,0 +1,136 @@
+/* Presentation fit pass: keeps long teaching statements readable on every output. */
+
+/* Default teaching statement scale. The legacy template was built for short phrases. */
+.sl-big{
+  padding:7vh 7vw!important;
+  justify-content:center!important;
+}
+.sl-big-text{
+  font-size:clamp(3.4rem,5.6vw,7.2rem)!important;
+  line-height:.91!important;
+  letter-spacing:-.012em!important;
+  max-width:min(1360px,86vw)!important;
+  text-wrap:balance;
+}
+.sl-big-ref{
+  max-width:min(980px,78vw)!important;
+  font-size:clamp(.9rem,1.25vw,1.25rem)!important;
+  line-height:1.4!important;
+  margin-top:28px!important;
+}
+
+/* Applied by kingdom-production-fixes.js based on actual copy length. */
+.slide.kp-copy-medium .sl-big-text{
+  font-size:clamp(3.15rem,5vw,6.4rem)!important;
+  max-width:min(1420px,88vw)!important;
+}
+.slide.kp-copy-long .sl-big-text{
+  font-size:clamp(2.8rem,4.35vw,5.5rem)!important;
+  line-height:.95!important;
+  max-width:min(1480px,90vw)!important;
+}
+.slide.kp-copy-long .sl-big-ref{
+  font-size:clamp(.82rem,1.08vw,1.08rem)!important;
+  margin-top:22px!important;
+}
+
+/* A projector should be readable from the room, not oversized to the point of clipping. */
+body.projector-mode .sl-big-text{
+  font-size:clamp(3.8rem,5.8vw,7.4rem)!important;
+  line-height:.91!important;
+  max-width:min(1440px,86vw)!important;
+}
+body.projector-mode .slide.kp-copy-medium .sl-big-text{
+  font-size:clamp(3.45rem,5.1vw,6.5rem)!important;
+}
+body.projector-mode .slide.kp-copy-long .sl-big-text{
+  font-size:clamp(3.05rem,4.35vw,5.65rem)!important;
+  line-height:.95!important;
+  max-width:min(1500px,89vw)!important;
+}
+body.projector-mode .sl-big-ref{
+  font-size:clamp(.95rem,1.15vw,1.2rem)!important;
+  max-width:min(1040px,76vw)!important;
+}
+
+/* Keep teaching and closing slides from becoming billboard-sized. */
+body.projector-mode .sl-te-h{
+  font-size:clamp(3.8rem,6.25vw,7.6rem)!important;
+  line-height:.9!important;
+  max-width:min(1380px,86vw)!important;
+}
+body.projector-mode .sl-pts li{
+  font-size:clamp(1.25rem,1.75vw,2rem)!important;
+  line-height:1.28!important;
+}
+body.projector-mode .sl-ft{
+  font-size:clamp(3.4rem,5.5vw,7rem)!important;
+  line-height:.92!important;
+  max-width:min(1400px,86vw)!important;
+}
+
+/* Participant slideshow on portrait phones. */
+@media(max-width:768px){
+  #ssl .ss-hdr{min-height:58px!important}
+  #ssl .ss-lbl{font-size:.66rem!important;letter-spacing:.14em!important}
+  #ssl .slide.sl-big{
+    padding:7vh 8vw!important;
+    justify-content:center!important;
+  }
+  #ssl .sl-big-sup{
+    font-size:clamp(.68rem,2.7vw,.85rem)!important;
+    letter-spacing:.2em!important;
+    margin-bottom:20px!important;
+  }
+  #ssl .sl-big-text{
+    font-size:clamp(2.35rem,7.6vw,3.55rem)!important;
+    line-height:.96!important;
+    max-width:94vw!important;
+    letter-spacing:-.006em!important;
+  }
+  #ssl .slide.kp-copy-medium .sl-big-text{
+    font-size:clamp(2.2rem,7.05vw,3.25rem)!important;
+  }
+  #ssl .slide.kp-copy-long .sl-big-text{
+    font-size:clamp(2rem,6.55vw,3rem)!important;
+    line-height:1!important;
+    max-width:94vw!important;
+  }
+  #ssl .sl-big-ref{
+    font-size:clamp(.78rem,2.8vw,.98rem)!important;
+    line-height:1.38!important;
+    max-width:88vw!important;
+    margin-top:24px!important;
+  }
+  #ssl .sl-te-h{
+    font-size:clamp(2.65rem,9.4vw,4.35rem)!important;
+    line-height:.93!important;
+  }
+  #ssl .sl-pts li{
+    font-size:clamp(1rem,3.7vw,1.3rem)!important;
+    line-height:1.3!important;
+  }
+  #ssl .sl-sc-tx{
+    font-size:clamp(1.7rem,5.8vw,2.7rem)!important;
+    line-height:1.2!important;
+  }
+  #ssl .sl-sc-tk{
+    font-size:clamp(.9rem,3.1vw,1.1rem)!important;
+    line-height:1.38!important;
+  }
+  #ssl .sl-ft{
+    font-size:clamp(2.4rem,8vw,3.8rem)!important;
+    line-height:.97!important;
+  }
+}
+
+/* Admin preview and online slide cards should remain miniature previews. */
+#admin-hub .ctrl-prev-stage .sl-big-text,
+.online-current-slide .sl-big-text{
+  font-size:6em!important;
+  line-height:.93!important;
+}
+#admin-hub .ctrl-prev-stage .slide.kp-copy-long .sl-big-text,
+.online-current-slide .slide.kp-copy-long .sl-big-text{
+  font-size:4.7em!important;
+}
