@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
+RUNTIME = ROOT / "kingdom-v2.js"
 
 
 def replace_all(text: str, replacements: dict[str, str]) -> str:
@@ -13,7 +15,35 @@ def replace_all(text: str, replacements: dict[str, str]) -> str:
     return text
 
 
+def validate_runtime() -> None:
+    runtime = RUNTIME.read_text(encoding="utf-8")
+
+    # Fail the deployment before a browser sees malformed JavaScript.
+    subprocess.run(["node", "--check", str(RUNTIME)], check=True)
+
+    expected_markers = [
+        "const SLIDES = [",
+        "const POLLS = [",
+        "const QUESTIONS_DATA = [",
+        "The Principle of Identity",
+        "Pressure #",
+        "Weekly Practice",
+        "Closing Reflection",
+    ]
+    for marker in expected_markers:
+        if marker not in runtime:
+            raise RuntimeError(f"runtime is missing marker: {marker}")
+
+    slide_count = runtime.count("      t:")
+    if slide_count != 22:
+        raise RuntimeError(f"expected 22 lesson slides, found {slide_count}")
+
+    if "The Ministry" in runtime or "THE MINISTRY" in runtime:
+        raise RuntimeError("legacy series branding exists in the Kingdom runtime")
+
+
 def main() -> None:
+    validate_runtime()
     source = INDEX.read_text(encoding="utf-8")
 
     # The branch starts from the untouched full-featured presentation app.
