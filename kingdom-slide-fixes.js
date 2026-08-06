@@ -5,6 +5,11 @@
   function clone(value){ return JSON.parse(JSON.stringify(value)); }
   function html(value){ return String(value == null ? '' : value); }
   function safeItems(value){ return Array.isArray(value) ? value : []; }
+  function strip(value){
+    const node=document.createElement('div');
+    node.innerHTML=String(value||'');
+    return (node.textContent||'').replace(/\s+/g,' ').trim();
+  }
 
   const PSALM_139 = [
     {id:'ps139-13',ref:'Psalm 139:13',kjv:'For thou hast possessed my reins: thou hast covered me in my mother’s womb.',slides:[1]},
@@ -20,8 +25,9 @@
     const remaining=bank.filter(function(verse){
       return !verse || !/^ps139-(13-18|13|14|15|16|17|18)$/.test(String(verse.id||''));
     });
-    const firstPsalmIndex=Math.max(0,bank.findIndex(function(verse){ return verse && /^ps139-/.test(String(verse.id||'')); }));
-    remaining.splice(firstPsalmIndex,0,...clone(PSALM_139));
+    const found=bank.findIndex(function(verse){ return verse && /^ps139-/.test(String(verse.id||'')); });
+    const insertAt=found < 0 ? 0 : found;
+    remaining.splice(insertAt,0,...clone(PSALM_139));
     bank.splice(0,bank.length,...remaining);
     return bank;
   }
@@ -29,14 +35,12 @@
   function repairVerseBank(){
     try{ if(typeof VERSE_BANK !== 'undefined') replacePsalmEntries(VERSE_BANK); }catch(error){}
     if(Array.isArray(window.VERSE_BANK)) replacePsalmEntries(window.VERSE_BANK);
-
     try{
       if(typeof window.lessonPayload==='function'){
         const payload=window.lessonPayload('lesson-1');
         if(payload && Array.isArray(payload.verseBank)) replacePsalmEntries(payload.verseBank);
       }
     }catch(error){ console.warn('Psalm 139 verse-bank repair failed',error); }
-
     try{ if(typeof buildVerseBank==='function') buildVerseBank(); }catch(error){ console.warn('Verse bank rebuild failed',error); }
     try{ if(typeof buildMobileVerseList==='function') buildMobileVerseList(); }catch(error){}
   }
@@ -49,16 +53,26 @@
       }).join('')+'</div></div>';
     }
     if(slide.t==='pressure'){
-      return '<div class="slide kp-pressure" '+data+'><div><div class="kp-pressure-label">Pressure #'+html(slide.number)+' · '+html(slide.question)+'</div><div class="kp-pressure-title">'+html(slide.title)+'</div><div class="kp-pressure-principle">'+html(slide.principle)+'</div></div><div class="kp-pressure-side"><div class="kp-pressure-ref">'+html(slide.ref)+'</div><div class="kp-pressure-examples">'+safeItems(slide.examples).map(function(item){
+      return '<div class="slide kp-pressure" '+data+'><div class="kp-pressure-main"><div class="kp-pressure-label">Pressure #'+html(slide.number)+' · '+html(slide.question)+'</div><div class="kp-pressure-title">'+html(slide.title)+'</div><div class="kp-pressure-principle">'+html(slide.principle)+'</div></div><div class="kp-pressure-side"><div class="kp-pressure-ref">'+html(slide.ref)+'</div><div class="kp-pressure-examples">'+safeItems(slide.examples).map(function(item){
         return '<div class="kp-pressure-example">'+html(item)+'</div>';
       }).join('')+'</div></div></div>';
     }
     if(slide.t==='practice'){
-      return '<div class="slide kp-practice" '+data+'><div><div class="kp-section-kicker">Lesson 1</div><div class="kp-practice-title">'+html(slide.title)+'</div><div class="kp-practice-copy">'+html(slide.copy)+'</div></div><div class="kp-practice-list">'+safeItems(slide.items).map(function(item){
+      return '<div class="slide kp-practice" '+data+'><div class="kp-practice-main"><div class="kp-section-kicker">Lesson 1</div><div class="kp-practice-title">'+html(slide.title)+'</div><div class="kp-practice-copy">'+html(slide.copy)+'</div></div><div class="kp-practice-list">'+safeItems(slide.items).map(function(item){
         return '<div class="kp-practice-item">'+html(item)+'</div>';
       }).join('')+'</div></div>';
     }
+    if(slide.t==='te'){
+      return '<div class="slide sl-te kp-tail-te" '+data+'><div class="sl-te-n">'+html(slide.n||index+1)+'</div><div class="sl-te-h">'+html(slide.hl)+'</div><ul class="sl-pts">'+safeItems(slide.pts).map(function(item){return '<li>'+html(item)+'</li>';}).join('')+'</ul>'+(slide.ref?'<div class="sl-te-ref">'+html(slide.ref)+'</div>':'')+'</div>';
+    }
+    if(slide.t==='final'){
+      return '<div class="slide sl-final kp-tail-final" '+data+'><div class="sl-fk">'+html(slide.kicker)+'</div><div class="sl-ft">'+html(slide.text)+'</div><div class="sl-fs">'+html(slide.sub)+'</div>'+(slide.ref?'<div class="sl-fr">'+html(slide.ref)+'</div>':'')+'</div>';
+    }
     return null;
+  }
+
+  function renderFallback(slide,index){
+    return '<div class="slide kp-render-fallback" data-i="'+index+'"><div class="kp-render-fallback-kicker">Lesson 1</div><div class="kp-render-fallback-title">'+html(slide && (slide.title||slide.hl||slide.kicker||slide.sup||slide.ref)||'Kingdom Principles')+'</div><div class="kp-render-fallback-copy">'+html(slide && (slide.text||slide.copy||slide.sub||slide.principle)||'')+'</div></div>';
   }
 
   function installSafeRenderer(){
@@ -72,13 +86,14 @@
       }catch(error){
         console.error('Slide render failed',index+1,slide && slide.t,error);
       }
-      return '<div class="slide kp-render-fallback" data-i="'+index+'"><div class="kp-render-fallback-kicker">Lesson 1</div><div class="kp-render-fallback-title">'+html(slide && (slide.title||slide.hl||slide.kicker||slide.sup||slide.ref)||'Kingdom Principles')+'</div><div class="kp-render-fallback-copy">'+html(slide && (slide.text||slide.copy||slide.sub||slide.principle)||'')+'</div></div>';
+      return renderFallback(slide,index);
     };
     try{ renderSlide=repaired; }catch(error){}
     window.renderSlide=repaired;
+    return repaired;
   }
 
-  function rebuildSlides(){
+  function getSlides(){
     let slides=[];
     try{
       const payload=typeof window.lessonPayload==='function' ? window.lessonPayload('lesson-1') : null;
@@ -87,25 +102,68 @@
     if(!slides.length){
       try{ if(typeof LESSON1_SLIDES!=='undefined' && Array.isArray(LESSON1_SLIDES)) slides=LESSON1_SLIDES; }catch(error){}
     }
-    if(!slides.length) return;
+    return slides;
+  }
 
+  function elementFromMarkup(markup){
+    const template=document.createElement('template');
+    template.innerHTML=String(markup||'').trim();
+    return template.content.firstElementChild;
+  }
+
+  function repairTailSurface(host,slides,renderer){
+    if(!host) return;
+    for(let index=16;index<Math.min(22,slides.length);index+=1){
+      const markup=renderCustom(slides[index],index) || renderer(slides[index],index) || renderFallback(slides[index],index);
+      const replacement=elementFromMarkup(markup);
+      if(!replacement) throw new Error('No element rendered for slide '+(index+1));
+      const current=host.querySelector('.slide[data-i="'+index+'"]');
+      const wasActive=Boolean(current && current.classList.contains('on'));
+      if(wasActive) replacement.classList.add('on');
+      if(current) current.replaceWith(replacement);
+      else host.appendChild(replacement);
+      const visibleText=strip(replacement.innerHTML);
+      if(visibleText.length < 12) throw new Error('Slide '+(index+1)+' rendered without visible text');
+      replacement.dataset.kpTailVerified='true';
+    }
+  }
+
+  function rebuildSlides(renderer){
+    const slides=getSlides();
+    if(!slides.length) return;
     try{
       const main=document.getElementById('ss-slides');
       if(main && typeof buildSlides==='function') buildSlides(main,slides);
       const preview=document.getElementById('preview-slides');
       if(preview && typeof buildSlides==='function') buildSlides(preview,slides);
+
+      repairTailSurface(main,slides,renderer);
+      repairTailSurface(preview,slides,renderer);
+
       if(typeof renderDots==='function') renderDots(slides.length);
       if(typeof buildCtrlSurface==='function') buildCtrlSurface();
-      if(typeof goTo==='function') goTo(Math.min(Number(window.currentSlide||0),slides.length-1));
+      // Admin construction can rebuild its preview, so repair it again after controls exist.
+      repairTailSurface(document.getElementById('preview-slides'),slides,renderer);
+
+      const current=Math.max(0,Math.min(Number(window.currentSlide||0),slides.length-1));
+      if(typeof goTo==='function') goTo(current);
+
+      const verified=[16,17,18,19,20,21].every(function(index){
+        const node=main && main.querySelector('.slide[data-i="'+index+'"][data-kp-tail-verified="true"]');
+        return Boolean(node && strip(node.innerHTML).length>=12);
+      });
+      if(!verified) throw new Error('Slides 17-22 failed DOM verification');
       document.documentElement.dataset.kpSlidesVerified=String(slides.length);
+      document.documentElement.dataset.kpTailSlidesVerified='6';
     }catch(error){ console.error('Kingdom slide surface rebuild failed',error); }
   }
 
   function boot(){
     repairVerseBank();
-    installSafeRenderer();
-    rebuildSlides();
-    setTimeout(function(){ repairVerseBank(); rebuildSlides(); },350);
+    const renderer=installSafeRenderer();
+    rebuildSlides(renderer);
+    setTimeout(function(){ repairVerseBank(); rebuildSlides(renderer); },350);
+    setTimeout(function(){ rebuildSlides(renderer); },1200);
   }
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
