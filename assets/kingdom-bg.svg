@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" role="img" aria-label="Abstract Kingdom Principles background">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071521"/>
+      <stop offset="0.58" stop-color="#0D2232"/>
+      <stop offset="1" stop-color="#101417"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="72%" cy="28%" r="48%">
+      <stop offset="0" stop-color="#D6A63B" stop-opacity=".18"/>
+      <stop offset=".5" stop-color="#D6A63B" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#D6A63B" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="96" height="96" patternUnits="userSpaceOnUse">
+      <path d="M96 0H0V96" fill="none" stroke="#E8E3D9" stroke-opacity=".028" stroke-width="1"/>
+    </pattern>
+    <filter id="blur"><feGaussianBlur stdDeviation="34"/></filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#grid)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <g fill="none" stroke="#D6A63B" stroke-opacity=".11">
+    <circle cx="1500" cy="260" r="310"/>
+    <circle cx="1500" cy="260" r="420"/>
+    <circle cx="1500" cy="260" r="535"/>
+  </g>
+  <g opacity=".25" filter="url(#blur)">
+    <path d="M1120 100L1870 860" stroke="#D6A63B" stroke-width="18"/>
+    <path d="M1260 0L1920 670" stroke="#F2D48A" stroke-width="7"/>
+  </g>
+  <path d="M0 904C390 805 654 859 954 746c289-109 516-315 966-338v672H0Z" fill="#071521" fill-opacity=".58"/>
+  <path d="M0 946C402 854 690 901 1006 790c292-102 517-280 914-318" fill="none" stroke="#E8E3D9" stroke-opacity=".055"/>
+</svg>
