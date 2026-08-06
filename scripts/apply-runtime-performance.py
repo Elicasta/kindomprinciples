@@ -7,6 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 RUNTIME = ROOT / "kingdom-v2.js"
 
+LEGACY_ANON_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwcHB6bnlocmlja2NhYnBmdmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNDIwNjYsImV4cCI6MjEwMTYxODA2Nn0.G8W6ERO4jWvCjSPEKiz46325Rog4d4QT_G2VCv0hI6k"
+
 
 def main() -> None:
     runtime = RUNTIME.read_text(encoding="utf-8")
@@ -21,9 +23,18 @@ def main() -> None:
         "https://cgliqvizpcctqhsldixn.supabase.co",
         "https://vpppznyhrickcabpfvfx.supabase.co",
     )
+    # The preserved engine sends SB_KEY as both apikey and Bearer token.
+    # A modern sb_publishable key is not a JWT, so the legacy transport must use
+    # the project's anon JWT. The newer kingdom-supabase.js client still uses
+    # the publishable key independently.
     source = source.replace(
-        "sb_publishable_C0O6QwRy2nJIJLHCGuXWA_nZfrqTyi",
+        "sb_publishable_C0O6QwRy2nJIJLJHCGuXWA_nZfrqTyi",
+        LEGACY_ANON_JWT,
+    )
+    source = source.replace(
         "sb_publishable_ZvmCwSVoRGcxU3iBIwAh2Q_wqKiw9co",
+        LEGACY_ANON_JWT,
+        1,
     )
 
     js_tag = '<script src="/kingdom-supabase.js" id="kingdom-supabase-js"></script>'
@@ -34,11 +45,12 @@ def main() -> None:
 
     required = [
         "vpppznyhrickcabpfvfx.supabase.co",
+        LEGACY_ANON_JWT,
         "kingdom-supabase.js",
     ]
     for marker in required:
         if marker not in source:
-            raise RuntimeError(f"missing Supabase wiring marker: {marker}")
+            raise RuntimeError(f"missing Supabase wiring marker: {marker[:32]}")
 
     INDEX.write_text(source, encoding="utf-8")
     print("Kingdom Supabase wiring applied")
