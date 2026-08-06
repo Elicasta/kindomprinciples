@@ -1,0 +1,147 @@
+/* Kingdom Principles P2 concurrent scripture layout.
+   The preserved runtime writes Spanish into the *-en nodes and English into the *-es nodes.
+   These selectors intentionally follow the rendered data, not the legacy class names.
+*/
+body.scripture-mode #scripture-display{
+  background:
+    radial-gradient(circle at 78% 18%,rgba(214,166,59,.08),transparent 30%),
+    linear-gradient(145deg,#071521 0%,#0D2232 62%,#071521 100%)!important;
+}
+body.scripture-mode #sp-content.sp-content{
+  display:flex!important;
+  align-items:stretch!important;
+  justify-content:stretch!important;
+  min-height:100vh!important;
+  padding:clamp(46px,6vh,82px) clamp(54px,7vw,132px) clamp(34px,4.5vh,62px)!important;
+  overflow:hidden!important;
+  text-align:left!important;
+  background:transparent!important;
+}
+body.scripture-mode #sp-content .sp-bg{
+  background-image:url('/assets/kingdom-bg.svg')!important;
+  background-size:cover!important;
+  background-position:center!important;
+  filter:none!important;
+  opacity:.12!important;
+}
+body.scripture-mode #sp-content .sp-bg-ov{
+  background:linear-gradient(105deg,rgba(7,21,33,.97),rgba(13,34,50,.88))!important;
+}
+body.scripture-mode #sp-content .sp-inner{
+  position:relative!important;
+  z-index:2!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:calc(100vh - clamp(80px,10.5vh,144px))!important;
+  margin:0!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto auto!important;
+  align-content:stretch!important;
+}
+body.scripture-mode #sp-content .sp-mk{display:none!important;}
+
+/* Spanish RVR, primary and high on the screen. */
+body.scripture-mode #sp-ref-en{
+  grid-row:1!important;
+  align-self:start!important;
+  font-family:var(--fc)!important;
+  font-size:clamp(.86rem,1.18vw,1.42rem)!important;
+  font-weight:800!important;
+  line-height:1.1!important;
+  letter-spacing:.25em!important;
+  text-transform:uppercase!important;
+  color:var(--gold)!important;
+  margin:0 0 clamp(18px,2.5vh,34px)!important;
+  padding:0!important;
+  border:0!important;
+}
+body.scripture-mode #sp-tx-en{
+  grid-row:2!important;
+  align-self:start!important;
+  font-family:var(--fp)!important;
+  font-style:normal!important;
+  font-weight:400!important;
+  font-size:clamp(2.2rem,4.25vw,5.4rem)!important;
+  line-height:1.12!important;
+  letter-spacing:-.018em!important;
+  color:var(--w)!important;
+  width:min(1500px,94%)!important;
+  max-width:min(1500px,94%)!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  text-wrap:balance!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* English KJV, concurrent support at the bottom. */
+body.scripture-mode #sp-ref-es{
+  grid-row:3!important;
+  align-self:end!important;
+  font-family:var(--fc)!important;
+  font-size:clamp(.56rem,.72vw,.84rem)!important;
+  font-weight:700!important;
+  line-height:1.1!important;
+  letter-spacing:.2em!important;
+  text-transform:uppercase!important;
+  color:var(--gold)!important;
+  margin:clamp(22px,3vh,42px) 0 9px!important;
+  padding:clamp(16px,2vh,24px) 0 0!important;
+  border-top:1px solid rgba(214,166,59,.28)!important;
+}
+body.scripture-mode #sp-tx-es{
+  grid-row:4!important;
+  align-self:end!important;
+  font-family:var(--fp)!important;
+  font-style:italic!important;
+  font-weight:400!important;
+  font-size:clamp(.88rem,1.34vw,1.65rem)!important;
+  line-height:1.28!important;
+  color:rgba(232,227,217,.66)!important;
+  width:min(1080px,78%)!important;
+  max-width:min(1080px,78%)!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  text-wrap:pretty!important;
+}
+body.scripture-mode .sp-corner{
+  right:clamp(24px,3vw,52px)!important;
+  bottom:18px!important;
+  left:auto!important;
+  transform:none!important;
+  color:rgba(232,227,217,.16)!important;
+}
+
+/* Long passages reduce cleanly while retaining the Spanish-first hierarchy. */
+body.scripture-mode #sp-tx-en[data-length='long'],
+body.scripture-mode #sp-content.p2-long #sp-tx-en{
+  font-size:clamp(1.65rem,3.1vw,3.8rem)!important;
+  line-height:1.15!important;
+}
+body.scripture-mode #sp-content.p2-xlong #sp-tx-en{
+  font-size:clamp(1.28rem,2.35vw,2.9rem)!important;
+  line-height:1.18!important;
+}
+body.scripture-mode #sp-content.p2-long #sp-tx-es,
+body.scripture-mode #sp-content.p2-xlong #sp-tx-es{
+  font-size:clamp(.74rem,1vw,1.2rem)!important;
+}
+
+@media(max-width:900px){
+  body.scripture-mode #sp-content.sp-content{
+    padding:38px 34px 28px!important;
+  }
+  body.scripture-mode #sp-content .sp-inner{
+    min-height:calc(100vh - 66px)!important;
+  }
+  body.scripture-mode #sp-tx-en{
+    width:100%!important;
+    max-width:100%!important;
+    font-size:clamp(1.8rem,6.5vw,3.8rem)!important;
+  }
+  body.scripture-mode #sp-tx-es{
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
