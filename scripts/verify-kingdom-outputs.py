@@ -10,6 +10,7 @@ FIXES_JS = ROOT / "kingdom-production-fixes.js"
 DATA_JS = ROOT / "kingdom-v2.js"
 SUPABASE_JS = ROOT / "kingdom-supabase.js"
 FALLBACK_JS = ROOT / "kingdom-sync-fallback.js"
+SLIDE_FIXES_JS = ROOT / "kingdom-slide-fixes.js"
 QR_SVG = ROOT / "assets" / "qr-kingdom.svg"
 
 
@@ -30,12 +31,11 @@ def main() -> None:
     data_js = DATA_JS.read_text(encoding="utf-8")
     supabase_js = SUPABASE_JS.read_text(encoding="utf-8")
     fallback_js = FALLBACK_JS.read_text(encoding="utf-8")
+    slide_fixes_js = SLIDE_FIXES_JS.read_text(encoding="utf-8")
     qr_svg = QR_SVG.read_text(encoding="utf-8")
 
-    node_check(DATA_JS)
-    node_check(FIXES_JS)
-    node_check(SUPABASE_JS)
-    node_check(FALLBACK_JS)
+    for path in [DATA_JS, FIXES_JS, SUPABASE_JS, FALLBACK_JS, SLIDE_FIXES_JS]:
+        node_check(path)
 
     require(
         index,
@@ -52,6 +52,7 @@ def main() -> None:
             "kingdom-production-fixes.js",
             "kingdom-supabase.js",
             "kingdom-sync-fallback.js",
+            "kingdom-slide-fixes.js",
             "vpppznyhrickcabpfvfx.supabase.co",
             "kindomprinciples.vercel.app",
             "KINGDOM <span>PRINCIPLES</span>",
@@ -85,6 +86,26 @@ def main() -> None:
 
     if "characterData:true" in data_js:
         raise RuntimeError("input-lag character mutation observer survived")
+
+    require(
+        slide_fixes_js,
+        [
+            "Psalm 139:13",
+            "Psalm 139:14",
+            "Psalm 139:15",
+            "Psalm 139:16",
+            "Psalm 139:17",
+            "Psalm 139:18",
+            "slide.t==='triad'",
+            "slide.t==='pressure'",
+            "slide.t==='practice'",
+            "kp-render-fallback",
+            "kpSlidesVerified",
+            "buildSlides(main,slides)",
+            "buildSlides(preview,slides)",
+        ],
+        "final slide and verse-bank repair",
+    )
 
     require(
         supabase_js,
@@ -154,7 +175,7 @@ def main() -> None:
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom output, performance, Supabase, and sync fallback verification passed")
+    print("Kingdom outputs, all 22 slides, split verse bank, Supabase, and sync fallback verified")
 
 
 if __name__ == "__main__":
