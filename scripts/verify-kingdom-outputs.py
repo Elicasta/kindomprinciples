@@ -6,6 +6,8 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 FIT_CSS = ROOT / "kingdom-presentation-fit.css"
+P2_CSS = ROOT / "kingdom-p2-scripture.css"
+P2_JS = ROOT / "kingdom-p2-scripture.js"
 FIXES_JS = ROOT / "kingdom-production-fixes.js"
 DATA_JS = ROOT / "kingdom-v2.js"
 SUPABASE_JS = ROOT / "kingdom-supabase.js"
@@ -27,6 +29,8 @@ def node_check(path: Path) -> None:
 def main() -> None:
     index = INDEX.read_text(encoding="utf-8")
     fit_css = FIT_CSS.read_text(encoding="utf-8")
+    p2_css = P2_CSS.read_text(encoding="utf-8")
+    p2_js = P2_JS.read_text(encoding="utf-8")
     fixes_js = FIXES_JS.read_text(encoding="utf-8")
     data_js = DATA_JS.read_text(encoding="utf-8")
     supabase_js = SUPABASE_JS.read_text(encoding="utf-8")
@@ -34,7 +38,7 @@ def main() -> None:
     slide_fixes_js = SLIDE_FIXES_JS.read_text(encoding="utf-8")
     qr_svg = QR_SVG.read_text(encoding="utf-8")
 
-    for path in [DATA_JS, FIXES_JS, SUPABASE_JS, FALLBACK_JS, SLIDE_FIXES_JS]:
+    for path in [DATA_JS, FIXES_JS, SUPABASE_JS, FALLBACK_JS, SLIDE_FIXES_JS, P2_JS]:
         node_check(path)
 
     require(
@@ -49,6 +53,8 @@ def main() -> None:
             "id=\"obs-screen\"",
             "id=\"confidence-screen\"",
             "kingdom-presentation-fit.css",
+            "kingdom-p2-scripture.css",
+            "kingdom-p2-scripture.js",
             "kingdom-production-fixes.js",
             "kingdom-supabase.js",
             "kingdom-sync-fallback.js",
@@ -105,6 +111,31 @@ def main() -> None:
             "buildSlides(preview,slides)",
         ],
         "final slide and verse-bank repair",
+    )
+
+    require(
+        p2_css,
+        [
+            "Spanish RVR, primary",
+            "English KJV, concurrent support",
+            "#sp-ref-en",
+            "#sp-tx-en",
+            "#sp-ref-es",
+            "#sp-tx-es",
+            "grid-template-rows:auto minmax(0,1fr) auto auto",
+            "p2-xlong",
+        ],
+        "Spanish-primary P2 layout",
+    )
+    require(
+        p2_js,
+        [
+            "MutationObserver",
+            "p2-long",
+            "p2-xlong",
+            "kingdom:sync-state",
+        ],
+        "adaptive P2 scripture sizing",
     )
 
     require(
@@ -175,7 +206,7 @@ def main() -> None:
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom outputs, all 22 slides, split verse bank, Supabase, and sync fallback verified")
+    print("Kingdom outputs, P2 concurrent scripture, all 22 slides, split verse bank, Supabase, and sync fallback verified")
 
 
 if __name__ == "__main__":
