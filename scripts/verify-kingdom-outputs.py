@@ -9,6 +9,8 @@ FIT_CSS = ROOT / "kingdom-presentation-fit.css"
 FIXES_JS = ROOT / "kingdom-production-fixes.js"
 DATA_JS = ROOT / "kingdom-v2.js"
 SUPABASE_JS = ROOT / "kingdom-supabase.js"
+FALLBACK_JS = ROOT / "kingdom-sync-fallback.js"
+QR_SVG = ROOT / "assets" / "qr-kingdom.svg"
 
 
 def require(text: str, markers: list[str], label: str) -> None:
@@ -27,10 +29,13 @@ def main() -> None:
     fixes_js = FIXES_JS.read_text(encoding="utf-8")
     data_js = DATA_JS.read_text(encoding="utf-8")
     supabase_js = SUPABASE_JS.read_text(encoding="utf-8")
+    fallback_js = FALLBACK_JS.read_text(encoding="utf-8")
+    qr_svg = QR_SVG.read_text(encoding="utf-8")
 
     node_check(DATA_JS)
     node_check(FIXES_JS)
     node_check(SUPABASE_JS)
+    node_check(FALLBACK_JS)
 
     require(
         index,
@@ -46,7 +51,9 @@ def main() -> None:
             "kingdom-presentation-fit.css",
             "kingdom-production-fixes.js",
             "kingdom-supabase.js",
+            "kingdom-sync-fallback.js",
             "vpppznyhrickcabpfvfx.supabase.co",
+            "kindomprinciples.vercel.app",
             "KINGDOM <span>PRINCIPLES</span>",
         ],
         "generated index",
@@ -88,12 +95,24 @@ def main() -> None:
             ".from('questions')",
             ".from('responses')",
             ".from('votes')",
-            "setTimeout(function(){",
             "saveWorkbookAnswer(textarea)",
             "saveVote(poll, selected, anonymous)",
             "postgres_changes",
         ],
         "Kingdom Supabase integration",
+    )
+
+    require(
+        fallback_js,
+        [
+            "rest/v1/sync_state?id=eq.1",
+            "INTERVAL_MS = 700",
+            "window.handleMessage",
+            "Live ✓",
+            "Sync retrying",
+            "kpSyncTransport",
+        ],
+        "resilient sync fallback",
     )
 
     require(
@@ -121,18 +140,21 @@ def main() -> None:
         "adaptive presentation sizing",
     )
 
+    require(qr_svg, ["#D6A63B", "<svg", "<path"], "Kingdom join QR")
+
     forbidden = [
         "THE <span>MINISTRY</span>",
         "assets/ministry-bg.jpeg",
         "assets/qr-ministry.png",
         "ministry2026",
         "cgliqvizpcctqhsldixn.supabase.co",
+        "theministry.vercel.app",
     ]
     surviving = [marker for marker in forbidden if marker in index]
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom output, performance, and Supabase verification passed")
+    print("Kingdom output, performance, Supabase, and sync fallback verification passed")
 
 
 if __name__ == "__main__":
