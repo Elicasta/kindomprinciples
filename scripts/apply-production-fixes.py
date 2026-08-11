@@ -2,12 +2,18 @@ from __future__ import annotations
 
 from pathlib import Path
 import re
+import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
+STABILIZER = ROOT / "scripts" / "stabilize-kingdom-runtime.py"
 
 
 def main() -> None:
+    # Keep the Vercel build command simple. Stabilize the generated Kingdom
+    # runtime inside this existing production step before the HTML is finalized.
+    runpy.run_path(str(STABILIZER), run_name="__main__")
+
     source = INDEX.read_text(encoding="utf-8")
 
     source = source.replace(
