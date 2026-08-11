@@ -32,33 +32,35 @@ def main() -> None:
 
     css_tag = '<link href="/kingdom-presentation-fit.css" rel="stylesheet" id="kingdom-presentation-fit-css"/>'
     p2_css_tag = '<link href="/kingdom-p2-scripture.css" rel="stylesheet" id="kingdom-p2-scripture-css"/>'
+    cue_css_tag = '<link href="/kingdom-presenter-cues.css" rel="stylesheet" id="kingdom-presenter-cues-css"/>'
     fixes_tag = '<script src="/kingdom-production-fixes.js" id="kingdom-production-fixes-js"></script>'
     fallback_tag = '<script src="/kingdom-sync-fallback.js" id="kingdom-sync-fallback-js"></script>'
     p2_js_tag = '<script src="/kingdom-p2-scripture.js" id="kingdom-p2-scripture-js"></script>'
     p2_only_tag = '<script src="/kingdom-p2-scripture-only.js" id="kingdom-p2-scripture-only-js"></script>'
+    cue_js_tag = '<script src="/kingdom-presenter-cues.js" id="kingdom-presenter-cues-js"></script>'
 
-    source = re.sub(r'\s*<link[^>]+id="kingdom-presentation-fit-css"[^>]*>\s*', "\n", source)
-    source = re.sub(r'\s*<link[^>]+id="kingdom-p2-scripture-css"[^>]*>\s*', "\n", source)
-    source = re.sub(r'\s*<script[^>]+id="kingdom-production-fixes-js"[^>]*></script>\s*', "\n", source)
-    source = re.sub(r'\s*<script[^>]+id="kingdom-sync-fallback-js"[^>]*></script>\s*', "\n", source)
-    source = re.sub(r'\s*<script[^>]+id="kingdom-slide-fixes-js"[^>]*></script>\s*', "\n", source)
-    source = re.sub(r'\s*<script[^>]+id="kingdom-p2-scripture-js"[^>]*></script>\s*', "\n", source)
-    source = re.sub(r'\s*<script[^>]+id="kingdom-p2-scripture-only-js"[^>]*></script>\s*', "\n", source)
-    source = re.sub(r'\s*<script[^>]+id="kingdom-final-slides-js"[^>]*></script>\s*', "\n", source)
+    for marker in [
+        "kingdom-presentation-fit-css","kingdom-p2-scripture-css","kingdom-presenter-cues-css",
+        "kingdom-production-fixes-js","kingdom-sync-fallback-js","kingdom-slide-fixes-js",
+        "kingdom-p2-scripture-js","kingdom-p2-scripture-only-js","kingdom-final-slides-js","kingdom-presenter-cues-js"
+    ]:
+        source = re.sub(r'\s*<(?:link|script)[^>]+id="'+re.escape(marker)+r'"[^>]*>(?:</script>)?\s*', "\n", source)
 
     if "</head>" not in source or "</body>" not in source:
         raise RuntimeError("index.html is missing closing head/body tags")
 
-    source = source.replace("</head>", f"{css_tag}\n{p2_css_tag}\n</head>", 1)
-    source = source.replace("</body>", f"{fixes_tag}\n{fallback_tag}\n{p2_js_tag}\n{p2_only_tag}\n</body>", 1)
+    source = source.replace("</head>", f"{css_tag}\n{p2_css_tag}\n{cue_css_tag}\n</head>", 1)
+    source = source.replace("</body>", f"{fixes_tag}\n{fallback_tag}\n{p2_js_tag}\n{p2_only_tag}\n{cue_js_tag}\n</body>", 1)
 
     required = [
         "kingdom-presentation-fit.css",
         "kingdom-p2-scripture.css",
+        "kingdom-presenter-cues.css",
         "kingdom-production-fixes.js",
         "kingdom-sync-fallback.js",
         "kingdom-p2-scripture.js",
         "kingdom-p2-scripture-only.js",
+        "kingdom-presenter-cues.js",
         "KINGDOM <span>PRINCIPLES</span>",
         "kindomprinciples.vercel.app",
         "channel('kingdom-sync')",
@@ -70,10 +72,7 @@ def main() -> None:
         if marker not in source:
             raise RuntimeError(f"missing production marker: {marker}")
 
-    forbidden_runtime_layers = [
-        "kingdom-slide-fixes.js",
-        "kingdom-final-slides.js",
-    ]
+    forbidden_runtime_layers = ["kingdom-slide-fixes.js", "kingdom-final-slides.js"]
     surviving = [marker for marker in forbidden_runtime_layers if marker in source]
     if surviving:
         raise RuntimeError(f"legacy repair scripts survived production transform: {surviving}")
@@ -84,7 +83,7 @@ def main() -> None:
         raise RuntimeError("legacy realtime channel survived production transform")
 
     INDEX.write_text(source, encoding="utf-8")
-    print("Kingdom production shell stabilized: confidence, OBS, P2 clear semantics, and sync channel fixed")
+    print("Kingdom production shell stabilized with presenter cue surfaces")
 
 
 if __name__ == "__main__":
