@@ -12,6 +12,7 @@ FIXES_JS = ROOT / "kingdom-production-fixes.js"
 DATA_JS = ROOT / "kingdom-v2.js"
 SUPABASE_JS = ROOT / "kingdom-supabase.js"
 FALLBACK_JS = ROOT / "kingdom-sync-fallback.js"
+ADMIN_HEALTH_JS = ROOT / "kingdom-admin-health.js"
 QR_SVG = ROOT / "assets" / "qr-kingdom.svg"
 
 
@@ -34,9 +35,10 @@ def main() -> None:
     data_js = DATA_JS.read_text(encoding="utf-8")
     supabase_js = SUPABASE_JS.read_text(encoding="utf-8")
     fallback_js = FALLBACK_JS.read_text(encoding="utf-8")
+    admin_health_js = ADMIN_HEALTH_JS.read_text(encoding="utf-8")
     qr_svg = QR_SVG.read_text(encoding="utf-8")
 
-    for path in [DATA_JS, FIXES_JS, SUPABASE_JS, FALLBACK_JS, P2_JS]:
+    for path in [DATA_JS, FIXES_JS, SUPABASE_JS, FALLBACK_JS, P2_JS, ADMIN_HEALTH_JS]:
         node_check(path)
 
     require(
@@ -55,6 +57,7 @@ def main() -> None:
             "kingdom-p2-scripture.js",
             "kingdom-production-fixes.js",
             "kingdom-supabase.js",
+            "kingdom-admin-health.js",
             "kingdom-sync-fallback.js",
             "vpppznyhrickcabpfvfx.supabase.co",
             "kindomprinciples.vercel.app",
@@ -162,6 +165,22 @@ def main() -> None:
     )
 
     require(
+        admin_health_js,
+        [
+            "System Ready",
+            "Open P1",
+            "Open P2",
+            "OBS Lower",
+            "Confidence",
+            "kpSyncTransport",
+            "setInterval(update,1500)",
+        ],
+        "admin system health panel",
+    )
+    if "MutationObserver" in admin_health_js:
+        raise RuntimeError("admin health panel must remain observer-free")
+
+    require(
         fallback_js,
         [
             "rest/v1/sync_state?id=eq.1",
@@ -214,7 +233,7 @@ def main() -> None:
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom outputs verified: native 22-slide deck, bilingual split verse bank, Spanish-first P2, corrected confidence, single presentation sync path")
+    print("Kingdom outputs verified: native 22-slide deck, bilingual split verse bank, Spanish-first P2, corrected confidence, single sync path, admin diagnostics")
 
 
 if __name__ == "__main__":
