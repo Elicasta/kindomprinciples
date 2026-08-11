@@ -1,0 +1,78 @@
+/* Presenter cue surfaces. */
+body.confidence-mode .conf-main{
+  grid-template-columns:minmax(0,1.15fr) minmax(280px,.62fr) minmax(360px,.82fr)!important;
+  gap:18px!important;
+}
+body.confidence-mode .kp-conf-cues{
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  border:1px solid var(--ln);
+  background:#0d0d0d;
+  padding:24px 26px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.kp-cue-head,.kp-admin-cue-head{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  font-family:var(--fc);
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--red);
+  margin-bottom:16px;
+}
+.kp-cue-head span:last-child,.kp-admin-cue-head span:last-child{color:rgba(241,237,228,.42)}
+.kp-cue-points{list-style:none;margin:0;padding:0;display:grid;gap:12px;}
+.kp-cue-points li{
+  position:relative;
+  padding-left:20px;
+  font-family:var(--fc);
+  font-size:clamp(1rem,1.25vw,1.45rem);
+  font-weight:700;
+  line-height:1.18;
+  color:rgba(241,237,228,.9);
+}
+.kp-cue-points li::before{content:'';position:absolute;left:0;top:.45em;width:7px;height:7px;background:var(--red);}
+.kp-cue-note{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid rgba(241,237,228,.12);
+  display:grid;
+  gap:5px;
+}
+.kp-cue-note b,.kp-admin-next b{
+  font-family:var(--fc);
+  font-size:.62rem;
+  letter-spacing:.17em;
+  text-transform:uppercase;
+  color:var(--red);
+}
+.kp-cue-note span{font-family:var(--fb);font-size:clamp(.95rem,1.05vw,1.2rem);line-height:1.25;color:rgba(241,237,228,.66);}
+.kp-cue-empty{font-family:var(--fc);font-size:.9rem;color:rgba(241,237,228,.4);}
+
+#admin-hub .kp-admin-cues{
+  border:1px solid var(--ln);
+  background:#0d0d0d;
+  padding:14px 16px;
+  margin:0 10px 10px;
+  max-height:240px;
+  overflow:auto;
+}
+#admin-hub .kp-admin-cues .kp-cue-points{gap:7px;}
+#admin-hub .kp-admin-cues .kp-cue-points li{font-size:.8rem;line-height:1.25;padding-left:15px;}
+#admin-hub .kp-admin-cues .kp-cue-points li::before{width:5px;height:5px;}
+.kp-admin-next{margin-top:12px;padding-top:10px;border-top:1px solid var(--ln);display:flex;gap:9px;align-items:baseline;}
+.kp-admin-next span{font-family:var(--fc);font-size:.72rem;font-weight:800;text-transform:uppercase;color:rgba(241,237,228,.7);}
+
+@media(max-width:1180px){
+  body.confidence-mode .conf-main{grid-template-columns:minmax(0,1.15fr) minmax(250px,.65fr)!important;grid-template-rows:minmax(0,1fr) auto!important;}
+  body.confidence-mode .kp-conf-cues{grid-column:1 / -1;max-height:245px;padding:18px 24px;}
+  body.confidence-mode .kp-conf-cues .kp-cue-points{grid-template-columns:1fr 1fr;gap:8px 24px;}
+  body.confidence-mode .kp-conf-cues .kp-cue-points li{font-size:1rem;}
+  body.confidence-mode .kp-cue-note{margin-top:12px;padding-top:10px;}
+}
