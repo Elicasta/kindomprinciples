@@ -59,6 +59,10 @@ def main() -> None:
             "vpppznyhrickcabpfvfx.supabase.co",
             "kindomprinciples.vercel.app",
             "KINGDOM <span>PRINCIPLES</span>",
+            "channel('kingdom-sync')",
+            "const slide=LESSON1_SLIDES[i] || LESSON1_SLIDES[0]",
+            "const nextSlide=LESSON1_SLIDES[i+1] || null",
+            "scripture_clear',manual:true",
         ],
         "generated index",
     )
@@ -96,6 +100,7 @@ def main() -> None:
             "Psalm 139:17",
             "Psalm 139:18",
             "hidden:true",
+            "rvr:'Porque tú formaste mis entrañas",
         ],
         "stable lesson runtime",
     )
@@ -151,9 +156,9 @@ def main() -> None:
             ".from('votes')",
             "saveWorkbookAnswer(textarea)",
             "saveVote(poll, selected, anonymous)",
-            "postgres_changes",
+            "window.kingdomDataReady = true;",
         ],
-        "Kingdom Supabase integration",
+        "Kingdom Supabase persistence integration",
     )
 
     require(
@@ -203,12 +208,13 @@ def main() -> None:
         "ministry2026",
         "cgliqvizpcctqhsldixn.supabase.co",
         "theministry.vercel.app",
+        "channel('ministry-sync')",
     ]
     surviving = [marker for marker in forbidden if marker in index]
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom outputs verified: native 22-slide deck, split verse bank, Spanish-first P2, Supabase, and resilient sync")
+    print("Kingdom outputs verified: native 22-slide deck, bilingual split verse bank, Spanish-first P2, corrected confidence, single presentation sync path")
 
 
 if __name__ == "__main__":
