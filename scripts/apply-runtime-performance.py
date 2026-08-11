@@ -18,9 +18,6 @@ def main() -> None:
     if "kpRuntimeOptimized" not in runtime:
         raise RuntimeError("optimized runtime marker is missing")
 
-    # Keep the data client focused on persistence. Presentation sync already has
-    # its own Realtime/REST transport, so a second sync_state subscription only
-    # adds sockets and failure noise.
     data_client = DATA_CLIENT.read_text(encoding="utf-8")
     data_client = data_client.replace("    subscribeToState();\n", "    window.kingdomDataReady = true;\n", 1)
     if "window.kingdomDataReady = true;" not in data_client:
@@ -43,23 +40,26 @@ def main() -> None:
         1,
     )
 
-    js_tag = '<script src="/kingdom-supabase.js" id="kingdom-supabase-js"></script>'
+    data_tag = '<script src="/kingdom-supabase.js" id="kingdom-supabase-js"></script>'
+    health_tag = '<script src="/kingdom-admin-health.js" id="kingdom-admin-health-js"></script>'
     source = re.sub(r'\s*<script[^>]+id="kingdom-supabase-js"[^>]*></script>\s*', "\n", source)
+    source = re.sub(r'\s*<script[^>]+id="kingdom-admin-health-js"[^>]*></script>\s*', "\n", source)
     if "</body>" not in source:
         raise RuntimeError("index.html is missing </body>")
-    source = source.replace("</body>", f"{js_tag}\n</body>", 1)
+    source = source.replace("</body>", f"{data_tag}\n{health_tag}\n</body>", 1)
 
     required = [
         "vpppznyhrickcabpfvfx.supabase.co",
         LEGACY_ANON_JWT,
         "kingdom-supabase.js",
+        "kingdom-admin-health.js",
     ]
     for marker in required:
         if marker not in source:
-            raise RuntimeError(f"missing Supabase wiring marker: {marker[:32]}")
+            raise RuntimeError(f"missing runtime wiring marker: {marker[:32]}")
 
     INDEX.write_text(source, encoding="utf-8")
-    print("Kingdom Supabase persistence wiring applied without duplicate presentation realtime")
+    print("Kingdom persistence and admin diagnostics wiring applied")
 
 
 if __name__ == "__main__":
