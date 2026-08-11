@@ -17,9 +17,6 @@ def replace_once(source: str, old: str, new: str, label: str) -> str:
 def main() -> None:
     source = RUNTIME.read_text(encoding="utf-8")
 
-    # Normalize the final seven slides to native types supported by the preserved
-    # presentation engine. This removes the need for DOM repair observers and
-    # navigation wrappers on projector/admin surfaces.
     source = replace_once(
         source,
         """    {
@@ -89,25 +86,22 @@ def main() -> None:
         "custom final slide types",
     )
 
-    # Keep the full Psalm range available for concurrent scripture mapping, but
-    # hide it from the verse bank. The bank exposes one verse at a time.
     source = replace_once(
         source,
         """    {id:'ps139-13-18',ref:'Psalm 139:13-18',kjv:'For thou hast possessed my reins: thou hast covered me in my mother’s womb. I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well. My substance was not hid from thee, when I was made in secret, and curiously wrought in the lowest parts of the earth. Thine eyes did see my substance, yet being unperfect; and in thy book all my members were written, which in continuance were fashioned, when as yet there was none of them. How precious also are thy thoughts unto me, O God! how great is the sum of them! If I should count them, they are more in number than the sand: when I awake, I am still with thee.',slides:[1]},
 """,
         """    {id:'ps139-13-18',ref:'Psalm 139:13-18',hidden:true,kjv:'For thou hast possessed my reins: thou hast covered me in my mother’s womb. I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well. My substance was not hid from thee, when I was made in secret, and curiously wrought in the lowest parts of the earth. Thine eyes did see my substance, yet being unperfect; and in thy book all my members were written, which in continuance were fashioned, when as yet there was none of them. How precious also are thy thoughts unto me, O God! how great is the sum of them! If I should count them, they are more in number than the sand: when I awake, I am still with thee.',slides:[1]},
-    {id:'ps139-13',ref:'Psalm 139:13',kjv:'For thou hast possessed my reins: thou hast covered me in my mother’s womb.',slides:[1]},
-    {id:'ps139-14',ref:'Psalm 139:14',kjv:'I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.',slides:[1,20]},
-    {id:'ps139-15',ref:'Psalm 139:15',kjv:'My substance was not hid from thee, when I was made in secret, and curiously wrought in the lowest parts of the earth.',slides:[1]},
-    {id:'ps139-16',ref:'Psalm 139:16',kjv:'Thine eyes did see my substance, yet being unperfect; and in thy book all my members were written, which in continuance were fashioned, when as yet there was none of them.',slides:[1]},
-    {id:'ps139-17',ref:'Psalm 139:17',kjv:'How precious also are thy thoughts unto me, O God! how great is the sum of them!',slides:[1]},
-    {id:'ps139-18',ref:'Psalm 139:18',kjv:'If I should count them, they are more in number than the sand: when I awake, I am still with thee.',slides:[1]},
+    {id:'ps139-13',ref:'Psalm 139:13',kjv:'For thou hast possessed my reins: thou hast covered me in my mother’s womb.',rvr:'Porque tú formaste mis entrañas; tú me hiciste en el vientre de mi madre.',slides:[1]},
+    {id:'ps139-14',ref:'Psalm 139:14',kjv:'I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.',rvr:'Te alabaré; porque formidables, maravillosas son tus obras; estoy maravillado, y mi alma lo sabe muy bien.',slides:[1,20]},
+    {id:'ps139-15',ref:'Psalm 139:15',kjv:'My substance was not hid from thee, when I was made in secret, and curiously wrought in the lowest parts of the earth.',rvr:'No fue encubierto de ti mi cuerpo, bien que en oculto fui formado, y entretejido en lo más profundo de la tierra.',slides:[1]},
+    {id:'ps139-16',ref:'Psalm 139:16',kjv:'Thine eyes did see my substance, yet being unperfect; and in thy book all my members were written, which in continuance were fashioned, when as yet there was none of them.',rvr:'Mi embrión vieron tus ojos, y en tu libro estaban escritas todas aquellas cosas que fueron luego formadas, sin faltar una de ellas.',slides:[1]},
+    {id:'ps139-17',ref:'Psalm 139:17',kjv:'How precious also are thy thoughts unto me, O God! how great is the sum of them!',rvr:'¡Cuán preciosos me son, oh Dios, tus pensamientos! ¡Cuán grande es la suma de ellos!',slides:[1]},
+    {id:'ps139-18',ref:'Psalm 139:18',kjv:'If I should count them, they are more in number than the sand: when I awake, I am still with thee.',rvr:'Si los enumero, se multiplican más que la arena; despierto, y aún estoy contigo.',slides:[1]},
 """,
         "Psalm 139 aggregate verse",
     )
 
-    # Remove the old duplicate standalone Psalm 139:14 row after adding the split bank.
-    duplicate = "    {id:'ps139-14',ref:'Psalm 139:14',kjv:'I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.',slides:[1,20]}\n"
+    duplicate = "    {id:'ps139-14',ref:'Psalm 139:14',kjv:'I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.',slides:[1,20]},\n"
     first = source.find(duplicate)
     second = source.find(duplicate, first + 1) if first >= 0 else -1
     if second >= 0:
@@ -143,13 +137,14 @@ def main() -> None:
         "hidden:true",
         "Psalm 139:13",
         "Psalm 139:18",
+        "rvr:'Porque tú formaste mis entrañas",
     ]
     missing = [item for item in required if item not in source]
     if missing:
         raise RuntimeError(f"stabilized runtime missing markers: {missing}")
 
     RUNTIME.write_text(source, encoding="utf-8")
-    print("Kingdom runtime stabilized: native slides, split verse bank, no repair layer")
+    print("Kingdom runtime stabilized: native slides, split bilingual verse bank, no repair layer")
 
 
 if __name__ == "__main__":
