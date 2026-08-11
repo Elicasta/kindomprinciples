@@ -13,6 +13,7 @@
     ps13914:{ref_en:'Psalm 139:14',text_en:'I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works; and that my soul knoweth right well.',ref_es:'Salmos 139:14',text_es:'Te alabaré; porque formidables, maravillosas son tus obras; estoy maravillado, y mi alma lo sabe muy bien.'},
     mt317:{ref_en:'Matthew 3:17',text_en:'And lo a voice from heaven, saying, This is my beloved Son, in whom I am well pleased.',ref_es:'Mateo 3:17',text_es:'Y hubo una voz de los cielos, que decía: Este es mi Hijo amado, en quien tengo complacencia.'},
     mt413:{ref_en:'Matthew 4:1-3',text_en:'Then was Jesus led up of the Spirit into the wilderness to be tempted of the devil. And when he had fasted forty days and forty nights, he was afterward an hungred. And when the tempter came to him, he said, If thou be the Son of God, command that these stones be made bread.',ref_es:'Mateo 4:1-3',text_es:'Entonces Jesús fue llevado por el Espíritu al desierto, para ser tentado por el diablo. Y después de haber ayunado cuarenta días y cuarenta noches, tuvo hambre. Y vino a él el tentador, y le dijo: Si eres Hijo de Dios, di que estas piedras se conviertan en pan.'},
+    mt434:{ref_en:'Matthew 4:3-4',text_en:'And when the tempter came to him, he said, If thou be the Son of God, command that these stones be made bread. But he answered and said, It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.',ref_es:'Mateo 4:3-4',text_es:'Y vino a él el tentador, y le dijo: Si eres Hijo de Dios, di que estas piedras se conviertan en pan. Él respondió y dijo: Escrito está: No sólo de pan vivirá el hombre, sino de toda palabra que sale de la boca de Dios.'},
     mt44:{ref_en:'Matthew 4:4',text_en:'But he answered and said, It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.',ref_es:'Mateo 4:4',text_es:'Él respondió y dijo: Escrito está: No sólo de pan vivirá el hombre, sino de toda palabra que sale de la boca de Dios.'},
     mt457:{ref_en:'Matthew 4:5-7',text_en:'Then the devil taketh him up into the holy city, and setteth him on a pinnacle of the temple, And saith unto him, If thou be the Son of God, cast thyself down: for it is written, He shall give his angels charge concerning thee: and in their hands they shall bear thee up, lest at any time thou dash thy foot against a stone. Jesus said unto him, It is written again, Thou shalt not tempt the Lord thy God.',ref_es:'Mateo 4:5-7',text_es:'Entonces el diablo le llevó a la santa ciudad, y le puso sobre el pináculo del templo, y le dijo: Si eres Hijo de Dios, échate abajo; porque escrito está: A sus ángeles mandará acerca de ti, y, en sus manos te sostendrán, para que no tropieces con tu pie en piedra. Jesús le dijo: Escrito está también: No tentarás al Señor tu Dios.'},
     mt4810:{ref_en:'Matthew 4:8-10',text_en:'Again, the devil taketh him up into an exceeding high mountain, and sheweth him all the kingdoms of the world, and the glory of them; And saith unto him, All these things will I give thee, if thou wilt fall down and worship me. Then saith Jesus unto him, Get thee hence, Satan: for it is written, Thou shalt worship the Lord thy God, and him only shalt thou serve.',ref_es:'Mateo 4:8-10',text_es:'Otra vez le llevó el diablo a un monte muy alto, y le mostró todos los reinos del mundo y la gloria de ellos, y le dijo: Todo esto te daré, si postrado me adorares. Entonces Jesús le dijo: Vete, Satanás, porque escrito está: Al Señor tu Dios adorarás, y a él sólo servirás.'},
@@ -21,8 +22,6 @@
     col33:{ref_en:'Colossians 3:3',text_en:'For ye are dead, and your life is hid with Christ in God.',ref_es:'Colosenses 3:3',text_es:'Porque habéis muerto, y vuestra vida está escondida con Cristo en Dios.'}
   };
 
-  // Zero-based slide index to concurrent scripture. Slides with no direct text keep
-  // the last scripture on screen instead of displaying teaching points.
   const BY_SLIDE = {
     1:'ps13914',
     4:'mt317',
@@ -33,7 +32,7 @@
     10:'rom81417',
     11:'mt44',
     13:'mt44',
-    16:'mt44',
+    16:'mt434',
     17:'mt457',
     18:'mt4810',
     20:'rom81417'
@@ -47,7 +46,6 @@
     if(wait) wait.classList.add('hidden');
     if(content) content.style.display='flex';
 
-    // Existing element names are legacy. Their visual role is Spanish main, English support.
     const mainRef=document.getElementById('sp-ref-en');
     const mainText=document.getElementById('sp-tx-en');
     const supportRef=document.getElementById('sp-ref-es');
@@ -80,11 +78,16 @@
       const index=slideNumber(message);
       const scripture=index===null?null:scriptureForSlide(index);
       if(scripture) showScripture(scripture);
-      // No scripture means retain the previous scripture. Never render slide points.
       return;
     }
     if(message && message.type==='scripture'){
       showScripture(message.scripture || message.payload || message);
+      return;
+    }
+    if(message && message.type==='scripture_clear'){
+      // Auto P2 emits clear commands for non-scripture teaching slides. Ignore those
+      // so the concurrent scripture remains visible. Explicit Clear P2 carries manual:true.
+      if(message.manual && typeof previous==='function') return previous.apply(this,arguments);
       return;
     }
     if(message && (message.type==='lesson_select' || message.type==='presentation_start')){
@@ -93,7 +96,6 @@
     return typeof previous==='function' ? previous.apply(this,arguments) : undefined;
   };
 
-  // Block any late script from exposing the normal slide stage on P2.
   const style=document.createElement('style');
   style.id='kp-p2-scripture-only-css';
   style.textContent='body.scripture-mode #ssl,body.scripture-mode #ss-slides,body.scripture-mode .ss-stage{display:none!important}body.scripture-mode #scripture-display{display:flex!important}body.scripture-mode #sp-content{z-index:20!important}';
