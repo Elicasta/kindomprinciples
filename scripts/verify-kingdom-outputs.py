@@ -12,7 +12,6 @@ FIXES_JS = ROOT / "kingdom-production-fixes.js"
 DATA_JS = ROOT / "kingdom-v2.js"
 SUPABASE_JS = ROOT / "kingdom-supabase.js"
 FALLBACK_JS = ROOT / "kingdom-sync-fallback.js"
-SLIDE_FIXES_JS = ROOT / "kingdom-slide-fixes.js"
 QR_SVG = ROOT / "assets" / "qr-kingdom.svg"
 
 
@@ -35,10 +34,9 @@ def main() -> None:
     data_js = DATA_JS.read_text(encoding="utf-8")
     supabase_js = SUPABASE_JS.read_text(encoding="utf-8")
     fallback_js = FALLBACK_JS.read_text(encoding="utf-8")
-    slide_fixes_js = SLIDE_FIXES_JS.read_text(encoding="utf-8")
     qr_svg = QR_SVG.read_text(encoding="utf-8")
 
-    for path in [DATA_JS, FIXES_JS, SUPABASE_JS, FALLBACK_JS, SLIDE_FIXES_JS, P2_JS]:
+    for path in [DATA_JS, FIXES_JS, SUPABASE_JS, FALLBACK_JS, P2_JS]:
         node_check(path)
 
     require(
@@ -58,7 +56,6 @@ def main() -> None:
             "kingdom-production-fixes.js",
             "kingdom-supabase.js",
             "kingdom-sync-fallback.js",
-            "kingdom-slide-fixes.js",
             "vpppznyhrickcabpfvfx.supabase.co",
             "kindomprinciples.vercel.app",
             "KINGDOM <span>PRINCIPLES</span>",
@@ -86,32 +83,35 @@ def main() -> None:
             "pollBank:POLLS",
             "questions:QUESTIONS_DATA",
             "kpRuntimeOptimized",
-        ],
-        "lesson data and optimized runtime",
-    )
-
-    if "characterData:true" in data_js:
-        raise RuntimeError("input-lag character mutation observer survived")
-
-    require(
-        slide_fixes_js,
-        [
+            "KP_STABLE_RUNTIME='native-slides-v1'",
+            "t:'te', n:'16'",
+            "t:'te', n:'17'",
+            "t:'te', n:'18'",
+            "t:'te', n:'19'",
+            "t:'te', n:'20'",
             "Psalm 139:13",
             "Psalm 139:14",
             "Psalm 139:15",
             "Psalm 139:16",
             "Psalm 139:17",
             "Psalm 139:18",
-            "slide.t==='triad'",
-            "slide.t==='pressure'",
-            "slide.t==='practice'",
-            "kp-render-fallback",
-            "kpSlidesVerified",
-            "buildSlides(main,slides)",
-            "buildSlides(preview,slides)",
+            "hidden:true",
         ],
-        "final slide and verse-bank repair",
+        "stable lesson runtime",
     )
+
+    if "characterData:true" in data_js:
+        raise RuntimeError("input-lag character mutation observer survived")
+
+    forbidden_custom_types = ["t:'triad'", "t:'pressure'", "t:'practice'"]
+    surviving_custom = [marker for marker in forbidden_custom_types if marker in data_js]
+    if surviving_custom:
+        raise RuntimeError(f"unsupported custom slide types survived: {surviving_custom}")
+
+    forbidden_repair_scripts = ["kingdom-slide-fixes.js", "kingdom-final-slides.js"]
+    surviving_repairs = [marker for marker in forbidden_repair_scripts if marker in index]
+    if surviving_repairs:
+        raise RuntimeError(f"legacy slide repair scripts are still loaded: {surviving_repairs}")
 
     require(
         p2_css,
@@ -208,7 +208,7 @@ def main() -> None:
     if surviving:
         raise RuntimeError(f"legacy production markers survived: {surviving}")
 
-    print("Kingdom outputs, approved Spanish-first P2, all 22 slides, split verse bank, Supabase, and sync fallback verified")
+    print("Kingdom outputs verified: native 22-slide deck, split verse bank, Spanish-first P2, Supabase, and resilient sync")
 
 
 if __name__ == "__main__":
