@@ -10,8 +10,6 @@ STABILIZER = ROOT / "scripts" / "stabilize-kingdom-runtime.py"
 
 
 def main() -> None:
-    # Keep the Vercel build command simple. Stabilize the generated Kingdom
-    # runtime inside this existing production step before the HTML is finalized.
     runpy.run_path(str(STABILIZER), run_name="__main__")
 
     source = INDEX.read_text(encoding="utf-8")
@@ -21,6 +19,16 @@ def main() -> None:
         'KINGDOM <span>PRINCIPLES</span>',
     )
     source = source.replace('theministry.vercel.app', 'kindomprinciples.vercel.app')
+
+    # Fix stale internal names and known output bugs in the preserved shell.
+    source = source.replace("sbClient.channel('ministry-sync')", "sbClient.channel('kingdom-sync')")
+    source = source.replace(
+        "const slide=LESSON1_SLIDES[i-1] || LESSON1_SLIDES[0];\n  const nextSlide=LESSON1_SLIDES[i] || null;",
+        "const slide=LESSON1_SLIDES[i] || LESSON1_SLIDES[0];\n  const nextSlide=LESSON1_SLIDES[i+1] || null;",
+        1,
+    )
+    source = source.replace("if(ref) ref.textContent=cur.ref || 'Matthew 10';", "if(ref) ref.textContent=cur.ref || 'Kingdom Principles';")
+    source = source.replace("sbSend({type:'scripture_clear'});", "sbSend({type:'scripture_clear',manual:true});", 1)
 
     css_tag = '<link href="/kingdom-presentation-fit.css" rel="stylesheet" id="kingdom-presentation-fit-css"/>'
     p2_css_tag = '<link href="/kingdom-p2-scripture.css" rel="stylesheet" id="kingdom-p2-scripture-css"/>'
@@ -53,6 +61,10 @@ def main() -> None:
         "kingdom-p2-scripture-only.js",
         "KINGDOM <span>PRINCIPLES</span>",
         "kindomprinciples.vercel.app",
+        "channel('kingdom-sync')",
+        "const slide=LESSON1_SLIDES[i] || LESSON1_SLIDES[0]",
+        "const nextSlide=LESSON1_SLIDES[i+1] || null",
+        "scripture_clear',manual:true",
     ]
     for marker in required:
         if marker not in source:
@@ -68,9 +80,11 @@ def main() -> None:
 
     if 'theministry.vercel.app' in source:
         raise RuntimeError("legacy join domain survived production transform")
+    if "channel('ministry-sync')" in source:
+        raise RuntimeError("legacy realtime channel survived production transform")
 
     INDEX.write_text(source, encoding="utf-8")
-    print("Kingdom Principles production fixes applied without legacy slide repair scripts")
+    print("Kingdom production shell stabilized: confidence, OBS, P2 clear semantics, and sync channel fixed")
 
 
 if __name__ == "__main__":
