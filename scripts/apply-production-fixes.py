@@ -9,6 +9,7 @@ INDEX = ROOT / "index.html"
 RUNTIME = ROOT / "kingdom-v2.js"
 STABILIZER = ROOT / "scripts" / "stabilize-kingdom-runtime.py"
 LESSON2_STABILIZER = ROOT / "scripts" / "stabilize-lesson2-runtime.py"
+LIVE_VERIFY = ROOT / "scripts" / "verify-live-controls.py"
 
 
 def main() -> None:
@@ -105,6 +106,7 @@ def main() -> None:
         raise RuntimeError("legacy realtime channel survived production transform")
 
     INDEX.write_text(source, encoding="utf-8")
+    runpy.run_path(str(LIVE_VERIFY), run_name="__main__")
     print("Kingdom production shell stabilized with Lesson 2 live controls, timer sync, and persistent P2 Scripture")
 
 
