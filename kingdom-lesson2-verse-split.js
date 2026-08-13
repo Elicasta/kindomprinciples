@@ -28,6 +28,14 @@
     });
     return out;
   }
+  function installResolver(){
+    const prior=window.getVBSpanish;
+    const resolver=function(id){
+      try{const row=(VERSE_BANK||[]).find(function(v){return v.id===id;});if(row&&row.rvr)return row.rvr;}catch(e){}
+      return typeof prior==='function'?prior(id):'';
+    };
+    window.getVBSpanish=resolver;try{getVBSpanish=resolver;}catch(e){}
+  }
   function apply(){
     if(window.LESSON_SLUG!=='lesson-2')return;
     try{
@@ -35,6 +43,7 @@
       if(bank.length<25)return;
       VERSE_BANK.splice(0,VERSE_BANK.length,...bank);
       if(window.KINGDOM_LESSON2)window.KINGDOM_LESSON2.verseBank=copy(bank);
+      installResolver();
       if(typeof buildVerseBank==='function')buildVerseBank();
       if(typeof buildMobileVerseList==='function')buildMobileVerseList();
       window.KP_LESSON2_SPLIT_VERSES=bank.length;
@@ -42,6 +51,6 @@
   }
   const oldAdmin=window.adminSelectLesson;
   if(typeof oldAdmin==='function'){window.adminSelectLesson=function(slug){const r=oldAdmin.apply(this,arguments);if(slug==='lesson-2')apply();return r;};try{adminSelectLesson=window.adminSelectLesson;}catch(e){}}
-  function boot(){apply();}
+  function boot(){installResolver();apply();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
