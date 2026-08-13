@@ -13,14 +13,24 @@
     for(let i=0;i<list.length;i++)if(valid(list[i]))return list[i];
     return null;
   }
+  function spanish(sc){
+    if(sc.text_es||sc.rvr)return {ref:sc.ref_es||sc.ref_en||sc.ref||'',text:sc.text_es||sc.rvr};
+    if(window.LESSON_SLUG==='lesson-2'){
+      const bank=window.KINGDOM_LESSON2_SPANISH||{};
+      const row=bank[sc.ref_en||sc.ref||''];
+      if(row)return {ref:row.ref,text:row.text};
+    }
+    return {ref:sc.ref_es||sc.ref_en||sc.ref||'',text:sc.text_en||sc.kjv||''};
+  }
   function show(sc){
     if(!valid(sc))return;
+    const es=spanish(sc);
     const wait=document.getElementById('sp-wait');if(wait)wait.classList.add('hidden');
     const content=document.getElementById('sp-content');if(content)content.style.display='flex';
     const pr=document.getElementById('sp-ref-en'),pt=document.getElementById('sp-tx-en');
     const sr=document.getElementById('sp-ref-es'),st=document.getElementById('sp-tx-es');
-    if(pr)pr.textContent=sc.ref_es||sc.ref_en||sc.ref||'';
-    if(pt)pt.textContent=sc.text_es||sc.rvr||sc.text_en||sc.kjv||'';
+    if(pr)pr.textContent=es.ref;
+    if(pt)pt.textContent=es.text;
     if(sr)sr.textContent=(sc.ref_en||sc.ref||'')+((sc.ref_en||sc.ref)?' · KJV':'');
     if(st)st.textContent=sc.text_en||sc.kjv||'';
     document.body.classList.add('p2-live');
@@ -37,5 +47,5 @@
     return typeof prior==='function'?prior.apply(this,arguments):undefined;
   };
   try{handleMessage=window.handleMessage;}catch(e){}
-  window.KP_P2_CURRENT='persistent-scripture-v1';
+  window.KP_P2_CURRENT='persistent-scripture-v2';
 })();
