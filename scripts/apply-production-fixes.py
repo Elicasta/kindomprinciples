@@ -6,11 +6,34 @@ import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
+RUNTIME = ROOT / "kingdom-v2.js"
 STABILIZER = ROOT / "scripts" / "stabilize-kingdom-runtime.py"
 
 
 def main() -> None:
     runpy.run_path(str(STABILIZER), run_name="__main__")
+
+    # Unlock Lesson 2 in the Kingdom shell. The lesson payload itself lives in
+    # kingdom-lesson2.js so Lesson 1 remains isolated and stable.
+    runtime = RUNTIME.read_text(encoding="utf-8")
+    runtime = runtime.replace(
+        "num:'02', label:'Lesson 2', dateShort:'Coming Soon', dateLong:'Coming Soon',\n      title:'Priority', text:'What is organizing my life?', slides:'Locked',\n      tagline:'What is organizing my life?', reflectionTitle:'Priority', reflectionMeta:'Coming soon', open:false",
+        "num:'02', label:'Lesson 2', dateShort:'August 13', dateLong:'August 13, 2026',\n      title:'The Principle of Priority', text:'Matthew 6:19-34', slides:'48 Slides',\n      tagline:'Whatever Comes First Becomes Your Master', reflectionTitle:'The Principle of Priority', reflectionMeta:'Closing response · Weekly practice', open:true",
+        1,
+    )
+    runtime = runtime.replace(
+        "btn.textContent='LESSON 2 · PRIORITY'; btn.classList.remove('on'); btn.dataset.locked='true'; btn.onclick=function(event){event.preventDefault();};",
+        "btn.textContent='LESSON 2 · PRIORITY'; btn.classList.remove('on'); btn.dataset.locked='false'; btn.onclick=function(){ if(window.adminSelectLesson) window.adminSelectLesson('lesson-2'); };",
+        1,
+    )
+    runtime = runtime.replace(
+        "else{ btn.dataset.locked='true'; btn.onclick=function(event){event.preventDefault();}; }",
+        "else if(slug==='lesson-2'){ btn.dataset.locked='false'; btn.onclick=function(){ if(window.adminSelectLesson) window.adminSelectLesson('lesson-2'); }; } else{ btn.dataset.locked='true'; btn.onclick=function(event){event.preventDefault();}; }",
+        1,
+    )
+    if "slides:'48 Slides'" not in runtime or "adminSelectLesson('lesson-2')" not in runtime:
+        raise RuntimeError("Lesson 2 chooser wiring did not apply")
+    RUNTIME.write_text(runtime, encoding="utf-8")
 
     source = INDEX.read_text(encoding="utf-8")
 
