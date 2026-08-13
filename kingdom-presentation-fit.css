@@ -34,39 +34,145 @@
   margin-top:22px!important;
 }
 
+/* Projector: stronger separation from the room, without changing the brand. */
+body.projector-mode .slide:not(.sl-cover){
+  background:
+    radial-gradient(circle at 82% 18%,rgba(214,166,59,.16),transparent 29%),
+    radial-gradient(circle at 12% 88%,rgba(22,67,96,.42),transparent 36%),
+    linear-gradient(128deg,#06131d 0%,#0d2638 54%,#081117 100%)!important;
+  box-shadow:inset 0 0 150px rgba(0,0,0,.28)!important;
+}
+body.projector-mode .slide:not(.sl-cover)::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,.018),transparent 28%,transparent 72%,rgba(214,166,59,.025));
+}
+body.projector-mode .slide>*{position:relative;z-index:1}
+
 /* A projector should be readable from the room, not oversized to the point of clipping. */
+body.projector-mode .sl-big{
+  align-items:center!important;
+  text-align:center!important;
+  padding:8vh 8vw!important;
+}
+body.projector-mode .sl-big-sup{
+  font-size:clamp(.95rem,1.15vw,1.35rem)!important;
+  letter-spacing:.22em!important;
+  margin-bottom:24px!important;
+}
 body.projector-mode .sl-big-text{
-  font-size:clamp(3.8rem,5.8vw,7.4rem)!important;
-  line-height:.91!important;
-  max-width:min(1440px,86vw)!important;
+  font-size:clamp(4.25rem,6.25vw,8rem)!important;
+  line-height:.89!important;
+  max-width:min(1480px,88vw)!important;
+  text-align:center!important;
+  text-wrap:balance!important;
 }
 body.projector-mode .slide.kp-copy-medium .sl-big-text{
-  font-size:clamp(3.45rem,5.1vw,6.5rem)!important;
+  font-size:clamp(3.8rem,5.55vw,7rem)!important;
 }
 body.projector-mode .slide.kp-copy-long .sl-big-text{
-  font-size:clamp(3.05rem,4.35vw,5.65rem)!important;
-  line-height:.95!important;
-  max-width:min(1500px,89vw)!important;
+  font-size:clamp(3.15rem,4.55vw,5.9rem)!important;
+  line-height:.94!important;
+  max-width:min(1510px,90vw)!important;
 }
 body.projector-mode .sl-big-ref{
-  font-size:clamp(.95rem,1.15vw,1.2rem)!important;
-  max-width:min(1040px,76vw)!important;
+  font-size:clamp(1rem,1.3vw,1.4rem)!important;
+  max-width:min(1120px,80vw)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  color:rgba(232,227,217,.72)!important;
+  text-align:center!important;
 }
 
-/* Keep teaching and closing slides from becoming billboard-sized. */
+/* Projector teaching slides are statement boards: centered, no bullet dots. */
+body.projector-mode .sl-te{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  padding:7vh 8vw!important;
+}
+body.projector-mode .sl-te-n{display:none!important}
 body.projector-mode .sl-te-h{
-  font-size:clamp(3.8rem,6.25vw,7.6rem)!important;
-  line-height:.9!important;
-  max-width:min(1380px,86vw)!important;
+  font-size:clamp(4.1rem,6.7vw,8.2rem)!important;
+  line-height:.87!important;
+  max-width:min(1460px,88vw)!important;
+  margin:0 auto 3.2vh!important;
+  text-align:center!important;
+  text-wrap:balance!important;
+}
+body.projector-mode .sl-pts{
+  list-style:none!important;
+  padding:0!important;
+  margin:0 auto!important;
+  max-width:min(1360px,86vw)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:clamp(10px,1.35vh,20px)!important;
+  text-align:center!important;
 }
 body.projector-mode .sl-pts li{
-  font-size:clamp(1.25rem,1.75vw,2rem)!important;
-  line-height:1.28!important;
+  list-style:none!important;
+  font-size:clamp(1.65rem,2.15vw,2.65rem)!important;
+  line-height:1.18!important;
+  font-weight:700!important;
+  max-width:min(1280px,84vw)!important;
+  margin:0 auto!important;
+  padding:0!important;
+  text-align:center!important;
+  text-wrap:balance!important;
+}
+body.projector-mode .sl-pts li::marker{content:''!important}
+body.projector-mode .sl-pts:has(li:nth-child(5)) li{
+  font-size:clamp(1.4rem,1.82vw,2.2rem)!important;
+  line-height:1.16!important;
+}
+body.projector-mode .sl-pts:has(li:nth-child(7)) li{
+  font-size:clamp(1.2rem,1.55vw,1.9rem)!important;
+}
+/* Native renderer puts a teaching reference in the final div. Make Scripture refs obvious. */
+body.projector-mode .sl-te>div[style*="text-transform:uppercase"]{
+  margin-top:3vh!important;
+  font-size:clamp(.9rem,1.05vw,1.2rem)!important;
+  color:var(--gold)!important;
+  letter-spacing:.18em!important;
+  text-align:center!important;
+}
+
+/* Scripture slides: reference and text should never feel secondary. */
+body.projector-mode .sl-sc{
+  padding:7vh 8vw!important;
+  justify-content:center!important;
+}
+body.projector-mode .sl-sc-rf{
+  font-size:clamp(.95rem,1.15vw,1.35rem)!important;
+  letter-spacing:.18em!important;
+  margin-bottom:2.2vh!important;
+  color:var(--gold)!important;
+}
+body.projector-mode .sl-sc-tx{
+  font-size:clamp(2.7rem,4.15vw,5.25rem)!important;
+  line-height:1.1!important;
+  max-width:min(1480px,89vw)!important;
+}
+body.projector-mode .slide.kp-copy-long .sl-sc-tx{
+  font-size:clamp(2.15rem,3.2vw,4rem)!important;
+  line-height:1.12!important;
+}
+body.projector-mode .sl-sc-tk{
+  font-size:clamp(1rem,1.25vw,1.45rem)!important;
+  max-width:min(1180px,80vw)!important;
+  margin-top:2.5vh!important;
 }
 body.projector-mode .sl-ft{
-  font-size:clamp(3.4rem,5.5vw,7rem)!important;
-  line-height:.92!important;
-  max-width:min(1400px,86vw)!important;
+  font-size:clamp(3.7rem,5.8vw,7.3rem)!important;
+  line-height:.91!important;
+  max-width:min(1450px,88vw)!important;
+  text-align:center!important;
 }
 
 /* Participant slideshow on portrait phones. */
