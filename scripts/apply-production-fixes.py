@@ -38,11 +38,13 @@ def main() -> None:
     p2_js_tag = '<script src="/kingdom-p2-scripture.js" id="kingdom-p2-scripture-js"></script>'
     p2_only_tag = '<script src="/kingdom-p2-scripture-only.js" id="kingdom-p2-scripture-only-js"></script>'
     cue_js_tag = '<script src="/kingdom-presenter-cues.js" id="kingdom-presenter-cues-js"></script>'
+    lesson2_js_tag = '<script src="/kingdom-lesson2.js" id="kingdom-lesson2-js"></script>'
 
     for marker in [
         "kingdom-presentation-fit-css","kingdom-p2-scripture-css","kingdom-presenter-cues-css",
         "kingdom-production-fixes-js","kingdom-sync-fallback-js","kingdom-slide-fixes-js",
-        "kingdom-p2-scripture-js","kingdom-p2-scripture-only-js","kingdom-final-slides-js","kingdom-presenter-cues-js"
+        "kingdom-p2-scripture-js","kingdom-p2-scripture-only-js","kingdom-final-slides-js",
+        "kingdom-presenter-cues-js","kingdom-lesson2-js"
     ]:
         source = re.sub(r'\s*<(?:link|script)[^>]+id="'+re.escape(marker)+r'"[^>]*>(?:</script>)?\s*', "\n", source)
 
@@ -50,7 +52,7 @@ def main() -> None:
         raise RuntimeError("index.html is missing closing head/body tags")
 
     source = source.replace("</head>", f"{css_tag}\n{p2_css_tag}\n{cue_css_tag}\n</head>", 1)
-    source = source.replace("</body>", f"{fixes_tag}\n{fallback_tag}\n{p2_js_tag}\n{p2_only_tag}\n{cue_js_tag}\n</body>", 1)
+    source = source.replace("</body>", f"{fixes_tag}\n{fallback_tag}\n{p2_js_tag}\n{p2_only_tag}\n{cue_js_tag}\n{lesson2_js_tag}\n</body>", 1)
 
     required = [
         "kingdom-presentation-fit.css",
@@ -61,6 +63,7 @@ def main() -> None:
         "kingdom-p2-scripture.js",
         "kingdom-p2-scripture-only.js",
         "kingdom-presenter-cues.js",
+        "kingdom-lesson2.js",
         "KINGDOM <span>PRINCIPLES</span>",
         "kindomprinciples.vercel.app",
         "channel('kingdom-sync')",
@@ -83,7 +86,7 @@ def main() -> None:
         raise RuntimeError("legacy realtime channel survived production transform")
 
     INDEX.write_text(source, encoding="utf-8")
-    print("Kingdom production shell stabilized with presenter cue surfaces")
+    print("Kingdom production shell stabilized with Lesson 2 and presenter cue surfaces")
 
 
 if __name__ == "__main__":
