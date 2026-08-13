@@ -15,8 +15,6 @@ def main() -> None:
     runpy.run_path(str(STABILIZER), run_name="__main__")
     runpy.run_path(str(LESSON2_STABILIZER), run_name="__main__")
 
-    # Unlock Lesson 2 in the Kingdom shell. The lesson payload itself lives in
-    # kingdom-lesson2.js so Lesson 1 remains isolated and stable.
     runtime = RUNTIME.read_text(encoding="utf-8")
     runtime = runtime.replace(
         "num:'02', label:'Lesson 2', dateShort:'Coming Soon', dateLong:'Coming Soon',\n      title:'Priority', text:'What is organizing my life?', slides:'Locked',\n      tagline:'What is organizing my life?', reflectionTitle:'Priority', reflectionMeta:'Coming soon', open:false",
@@ -40,8 +38,6 @@ def main() -> None:
     source = INDEX.read_text(encoding="utf-8")
     source = source.replace('THE <span>MINISTRY</span>', 'KINGDOM <span>PRINCIPLES</span>')
     source = source.replace('theministry.vercel.app', 'kindomprinciples.vercel.app')
-
-    # Fix stale internal names and known output bugs in the preserved shell.
     source = source.replace("sbClient.channel('ministry-sync')", "sbClient.channel('kingdom-sync')")
     source = source.replace(
         "const slide=LESSON1_SLIDES[i-1] || LESSON1_SLIDES[0];\n  const nextSlide=LESSON1_SLIDES[i] || null;",
@@ -61,6 +57,7 @@ def main() -> None:
         ('kingdom-p2-scripture-js','/kingdom-p2-scripture.js'),
         ('kingdom-lesson2-js','/kingdom-lesson2.js'),
         ('kingdom-lesson2-spanish-js','/kingdom-lesson2-spanish.js'),
+        ('kingdom-lesson2-spanish-refresh-js','/kingdom-lesson2-spanish-refresh.js'),
         ('kingdom-lesson2-verse-split-js','/kingdom-lesson2-verse-split.js'),
         ('kingdom-lesson2-polls-js','/kingdom-lesson2-polls.js'),
         ('kingdom-presenter-cues-js','/kingdom-presenter-cues.js'),
@@ -86,9 +83,9 @@ def main() -> None:
     required = [
         "kingdom-presentation-fit.css","kingdom-p2-scripture.css","kingdom-presenter-cues.css",
         "kingdom-production-fixes.js","kingdom-sync-fallback.js","kingdom-p2-scripture.js",
-        "kingdom-lesson2.js","kingdom-lesson2-spanish.js","kingdom-lesson2-verse-split.js",
-        "kingdom-lesson2-polls.js","kingdom-presenter-cues.js","kingdom-live-control.js",
-        "kingdom-timer-standby.js","kingdom-p2-current.js",
+        "kingdom-lesson2.js","kingdom-lesson2-spanish.js","kingdom-lesson2-spanish-refresh.js",
+        "kingdom-lesson2-verse-split.js","kingdom-lesson2-polls.js","kingdom-presenter-cues.js",
+        "kingdom-live-control.js","kingdom-timer-standby.js","kingdom-p2-current.js",
         "KINGDOM <span>PRINCIPLES</span>","kindomprinciples.vercel.app","channel('kingdom-sync')",
         "const slide=LESSON1_SLIDES[i] || LESSON1_SLIDES[0]","const nextSlide=LESSON1_SLIDES[i+1] || null",
         "scripture_clear',manual:true",
