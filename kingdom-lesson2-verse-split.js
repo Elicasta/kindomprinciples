@@ -26,7 +26,8 @@
       const en=cut(v.kjv,plan.en),es=cut(v.rvr,plan.es);
       plan.refs.forEach(function(ref,i){out.push({id:ref.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),ref:ref,ref_es:esRef(ref),kjv:en[i]||'',rvr:es[i]||''});});
     });
-    return out;
+    const seen=new Set();
+    return out.filter(function(v){if(seen.has(v.ref))return false;seen.add(v.ref);return true;});
   }
   function installResolver(){
     const prior=window.getVBSpanish;
