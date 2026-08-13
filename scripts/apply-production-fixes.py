@@ -61,7 +61,6 @@ def main() -> None:
         ('kingdom-lesson2-spanish-refresh-js','/kingdom-lesson2-spanish-refresh.js'),
         ('kingdom-lesson2-verse-split-js','/kingdom-lesson2-verse-split.js'),
         ('kingdom-lesson2-polls-js','/kingdom-lesson2-polls.js'),
-        ('kingdom-projector-content-js','/kingdom-projector-content.js'),
         ('kingdom-presenter-cues-js','/kingdom-presenter-cues.js'),
         ('kingdom-live-control-js','/kingdom-live-control.js'),
         ('kingdom-timer-standby-js','/kingdom-timer-standby.js'),
@@ -86,8 +85,8 @@ def main() -> None:
         "kingdom-presentation-fit.css","kingdom-p2-scripture.css","kingdom-presenter-cues.css",
         "kingdom-production-fixes.js","kingdom-sync-fallback.js","kingdom-p2-scripture.js",
         "kingdom-lesson2.js","kingdom-lesson2-spanish.js","kingdom-lesson2-spanish-refresh.js",
-        "kingdom-lesson2-verse-split.js","kingdom-lesson2-polls.js","kingdom-projector-content.js",
-        "kingdom-presenter-cues.js","kingdom-live-control.js","kingdom-timer-standby.js","kingdom-p2-current.js",
+        "kingdom-lesson2-verse-split.js","kingdom-lesson2-polls.js","kingdom-presenter-cues.js",
+        "kingdom-live-control.js","kingdom-timer-standby.js","kingdom-p2-current.js",
         "KINGDOM <span>PRINCIPLES</span>","kindomprinciples.vercel.app","channel('kingdom-sync')",
         "const slide=LESSON1_SLIDES[i] || LESSON1_SLIDES[0]","const nextSlide=LESSON1_SLIDES[i+1] || null",
         "scripture_clear',manual:true",
@@ -108,7 +107,7 @@ def main() -> None:
 
     INDEX.write_text(source, encoding="utf-8")
     runpy.run_path(str(LIVE_VERIFY), run_name="__main__")
-    print("Kingdom production shell stabilized with Lesson 2 live controls, projector polish, timer sync, and persistent P2 Scripture")
+    print("Kingdom production shell stabilized with Lesson 2 live controls, timer sync, and persistent P2 Scripture")
 
 
 if __name__ == "__main__":
